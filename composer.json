@@ -14,7 +14,7 @@
         "laravel/tinker": "^2.8",
         "spatie/laravel-sluggable": "^3.5",
         "stripe/stripe-php": "^12.3",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^2.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
