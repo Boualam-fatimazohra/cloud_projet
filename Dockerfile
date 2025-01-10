@@ -4,6 +4,9 @@ FROM php:8.2-apache
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
+# Utiliser un miroir de secours pour APT
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+
 # Installer les dépendances système nécessaires pour Laravel
 RUN apt-get update && apt-get install -y \
     libzip-dev \
@@ -13,8 +16,11 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    libonig-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
