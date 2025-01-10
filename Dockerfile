@@ -18,15 +18,15 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copier les fichiers du projet dans le conteneur
 COPY . .
 
+# Définir les permissions pour le dossier de stockage
+RUN chown -R www-data:www-data /var/www/html/storage
+
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
 # Configurer Apache pour Laravel
 RUN a2enmod rewrite
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
-
-# Définir les permissions pour le dossier de stockage
-RUN chown -R www-data:www-data /var/www/html/storage
 
 # Exposer le port 80
 EXPOSE 80
