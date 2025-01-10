@@ -4,12 +4,13 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path'; // Importez le module 'path' pour gérer les chemins
 
 export default defineConfig({
+    base: '/', // ou '/mon-app/' si déployé dans un sous-répertoire
     server: {
-        host: '0.0.0.0', // Écoute sur toutes les interfaces réseau
-        port: process.env.PORT || 4173, // Utilise le port défini par Render ou 4173 par défaut
+        host: '0.0.0.0',
+        port: process.env.PORT || 4173,
     },
     preview: {
-        host: '0.0.0.0', // Écoute sur toutes les interfaces réseau en mode prévisualisation
+        host: '0.0.0.0',
         port: process.env.PORT || 4173,
     },
     plugins: [
@@ -28,9 +29,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            // Ajoutez un alias pour Ziggy
             'ziggy': path.resolve(__dirname, 'vendor/tightenco/ziggy/dist/vue.esm.js'),
-            // Optionnel : Ajoutez un alias pour simplifier les imports dans votre projet
             '@': path.resolve(__dirname, 'resources/js'),
         },
     },
