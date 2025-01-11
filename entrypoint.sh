@@ -1,12 +1,19 @@
 #!/bin/bash
+# Créer le fichier .env s'il n'existe pas
+if [ ! -f .env ]; then
+    cp .env.example .env
+fi
 
-# Set permissions
-chown -R www-data:www-data /var/www/html/storage
-chown -R www-data:www-data /var/www/html/bootstrap/cache
+# Générer la clé d'application si elle n'existe pas
+php artisan key:generate --force
 
-# Run migrations and seeders
+# Configurer le cache
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Exécuter les migrations
 php artisan migrate --force
-php artisan db:seed --force
 
-# Start Apache
-exec apache2-foreground
+# Démarrer Apache
+apache2-foreground
