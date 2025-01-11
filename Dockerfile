@@ -40,6 +40,13 @@ COPY . .
 RUN mkdir -p /var/www/html/public/build/assets && \
     chown -R www-data:www-data /var/www/html/public/build
 
+# Définir les permissions pour le cache npm
+RUN mkdir -p /var/www/.npm && \
+    chown -R www-data:www-data /var/www/.npm
+
+# Définir un dossier de cache npm accessible
+ENV npm_config_cache=/var/www/.npm
+
 # Installer les dépendances Node.js et compiler les assets
 USER www-data
 RUN npm install && npm run build
