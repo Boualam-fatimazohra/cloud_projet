@@ -1,19 +1,28 @@
 #!/bin/bash
-# Créer le fichier .env s'il n'existe pas
+
+# Attendre que la base de données soit prête (si nécessaire)
+# while ! nc -z $DB_HOST $DB_PORT; do
+#     sleep 1
+# done
+
+# Création du fichier .env si nécessaire
 if [ ! -f .env ]; then
     cp .env.example .env
 fi
 
-# Générer la clé d'application si elle n'existe pas
+# Génération de la clé d'application
 php artisan key:generate --force
 
-# Configurer le cache
+# Cache de la configuration
+php artisan config:clear
 php artisan config:cache
+php artisan route:clear
 php artisan route:cache
+php artisan view:clear
 php artisan view:cache
 
-# Exécuter les migrations
+# Migrations (avec --force pour l'environnement de production)
 php artisan migrate --force
 
-# Démarrer Apache
-apache2-foreground
+# Démarrage d'Apache
+exec apache2-foreground
