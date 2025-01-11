@@ -32,6 +32,17 @@ Route::middleware('auth')->group(function () {
     }));
   
 });
+Route::group(['prefix' => 'admin'], function () {
+    // Routes accessibles sans redirection
+    Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('login', [AdminAuthController::class, 'login'])->name('admin.login.post');
+    Route::post('logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+});
+
+// Routes protégées par redirectAdmin
+Route::group(['prefix' => 'admin', 'middleware' => 'redirectAdmin'], function () {
+    // Routes accessibles uniquement aux utilisateurs non administrateurs
+});
 
 //add to cart 
 
@@ -95,3 +106,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 //end
 
 require __DIR__ . '/auth.php';
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
+    Route::post('/products/store', [ProductController::class, 'store'])->name('admin.products.store');
+    Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('admin.products.update');
+    Route::delete('/products/image/{id}', [ProductController::class, 'deleteImage'])->name('admin.products.image.delete');
+    Route::delete('/products/destroy/{id}', [ProductController::class, 'destroy'])->name('admin.products.destroy');
+});
