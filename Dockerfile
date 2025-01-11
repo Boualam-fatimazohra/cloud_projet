@@ -59,6 +59,7 @@ USER root
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+RUN php artisan storage:link
 # Définir les permissions pour le dossier de stockage
 RUN chown -R www-data:www-data /var/www/html/storage
 
@@ -71,7 +72,9 @@ COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Exposer le port 80
 EXPOSE 80
-
+# Après avoir copié les fichiers
+RUN chmod -R 775 /var/www/html/storage
+RUN chmod -R 775 /var/www/html/bootstrap/cache
 # Utiliser le script entrypoint.sh comme point d'entrée
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
