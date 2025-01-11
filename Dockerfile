@@ -4,13 +4,7 @@ FROM php:8.2-apache
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Créer le fichier sources.list s'il n'existe pas
-RUN touch /etc/apt/sources.list
-
-# Utiliser un miroir de secours pour APT
-RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
-
-# Installer les dépendances système nécessaires pour Laravel
+# Installer les dépendances système nécessaires pour Laravel et PostgreSQL
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
@@ -20,9 +14,8 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     libonig-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd \
-    && apt-get clean \
+    libpq-dev \  # Ajouter cette ligne pour PostgreSQL && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd pdo_pgsql pgsql \  # Ajouter pdo_pgsql et pgsql && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Installer Composer
