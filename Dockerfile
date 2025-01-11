@@ -70,7 +70,7 @@ RUN a2enmod rewrite
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Exposer le port 80
- EXPOSE 10000
+ EXPOSE 80
 
 # Utiliser le script entrypoint.sh comme point d'entrée
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
