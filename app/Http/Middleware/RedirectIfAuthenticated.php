@@ -17,23 +17,19 @@ class RedirectIfAuthenticated
      * @param  string|null  ...$guards
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
-    {
-        // Si aucun guard n'est spécifié, utilise le guard par défaut (null)
-        $guards = empty($guards) ? [null] : $guards;
+{
+    $guards = empty($guards) ? [null] : $guards;
 
-        foreach ($guards as $guard) {
-            // Vérifie si l'utilisateur est connecté
-            if (Auth::guard($guard)->check()) {
-                // Si l'utilisateur est déjà sur la page d'accueil, ne pas rediriger
-                if ($request->routeIs('home')) {
-                    return $next($request);
-                }
-                // Redirige vers la page d'accueil
-                return redirect(RouteServiceProvider::HOME);
+    foreach ($guards as $guard) {
+        if (Auth::guard($guard)->check()) {
+            // Si l'utilisateur est déjà sur la page d'accueil, ne pas rediriger
+            if ($request->routeIs('home')) {
+                return $next($request);
             }
+            return redirect(RouteServiceProvider::HOME);
         }
-
-        // Continue la requête pour les utilisateurs non connectés
-        return $next($request);
     }
+
+    return $next($request);
+}
 }

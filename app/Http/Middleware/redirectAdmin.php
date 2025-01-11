@@ -16,14 +16,11 @@ class redirectAdmin
      * @param  string|null  $guard
      */
     public function handle(Request $request, Closure $next, $guard = null): Response
-    {
-        // Vérifie si l'utilisateur est connecté et est un administrateur
-        if (Auth::guard($guard)->check() && Auth::user()->isAdmin == 1) {
-            // Redirige vers le tableau de bord admin
-            return redirect()->route('admin.dashboard');
-        }
-
-        // Continue la requête pour les utilisateurs non administrateurs ou non connectés
-        return $next($request);
+{
+    if (Auth::guard($guard)->check() && Auth::user()->isAdmin == 1) {
+        return redirect()->route('admin.dashboard');
     }
+
+    return $next($request);
+}
 }
