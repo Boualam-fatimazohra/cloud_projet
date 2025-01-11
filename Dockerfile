@@ -4,6 +4,9 @@ FROM php:8.2-apache
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
+# Créer le fichier sources.list s'il n'existe pas
+RUN touch /etc/apt/sources.list
+
 # Utiliser un miroir de secours pour APT
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
