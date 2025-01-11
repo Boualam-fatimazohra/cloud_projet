@@ -7,20 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class redirectAdmin
+class RedirectAdmin
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string|null  $guard
-     */
     public function handle(Request $request, Closure $next, $guard = null): Response
-{
-    if (Auth::guard($guard)->check() && Auth::user()->isAdmin == 1) {
-        return redirect()->route('admin.dashboard');
-    }
+    {
+        if (Auth::guard($guard)->check() && Auth::user()->isAdmin == 1) {
+            return redirect()->route('admin.dashboard');
+        }
 
-    return $next($request);
-}
+        return $next($request);
+    }
 }

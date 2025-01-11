@@ -1,11 +1,12 @@
-#!/bin/sh
-set -e  # Arrêter le script en cas d'erreur
+#!/bin/bash
 
-# Exécuter les migrations
+# Set permissions
+chown -R www-data:www-data /var/www/html/storage
+chown -R www-data:www-data /var/www/html/bootstrap/cache
+
+# Run migrations and seeders
 php artisan migrate --force
-
-# Exécuter les seeders
 php artisan db:seed --force
 
-# Démarrer Apache
+# Start Apache
 exec apache2-foreground

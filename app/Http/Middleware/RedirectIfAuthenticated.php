@@ -10,26 +10,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string|null  ...$guards
-     */
     public function handle(Request $request, Closure $next, string ...$guards): Response
-{
-    $guards = empty($guards) ? [null] : $guards;
+    {
+        $guards = empty($guards) ? [null] : $guards;
 
-    foreach ($guards as $guard) {
-        if (Auth::guard($guard)->check()) {
-            // Si l'utilisateur est déjà sur la page d'accueil, ne pas rediriger
-            if ($request->routeIs('home')) {
-                return $next($request);
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                if ($request->routeIs('home')) {
+                    return $next($request);
+                }
+                return redirect(RouteServiceProvider::HOME);
             }
-            return redirect(RouteServiceProvider::HOME);
         }
-    }
 
-    return $next($request);
-}
+        return $next($request);
+    }
 }

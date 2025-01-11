@@ -16,28 +16,22 @@ use Inertia\Inertia;
 |--------------------------------------------------------------------------
 | Routes Publiques
 |--------------------------------------------------------------------------
-| Ces routes sont accessibles à tous les utilisateurs, même non connectés.
 */
 
-// Page d'accueil
 Route::get('/', [UserController::class, 'index'])->name('home');
 
-// Page de catégorie
 Route::get('/categorie', function () {
-    return Inertia::render('categori');
+    return Inertia::render('Categori');
 })->name('categorie');
 
-// Page de contact
 Route::get('/contact', function () {
-    return Inertia::render('contact');
+    return Inertia::render('Contact');
 })->name('contact');
 
-// Routes pour les produits
 Route::prefix('products')->controller(ProductListController::class)->group(function () {
     Route::get('/', 'index')->name('products.index');
 });
 
-// Routes pour le panier
 Route::prefix('cart')->controller(CartController::class)->group(function () {
     Route::get('view', 'view')->name('cart.view');
     Route::post('store/{product}', 'store')->name('cart.store');
@@ -49,19 +43,15 @@ Route::prefix('cart')->controller(CartController::class)->group(function () {
 |--------------------------------------------------------------------------
 | Routes pour les Utilisateurs Connectés
 |--------------------------------------------------------------------------
-| Ces routes sont accessibles uniquement aux utilisateurs authentifiés.
 */
 
 Route::middleware('auth')->group(function () {
-    // Tableau de bord utilisateur
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Gestion du profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Checkout
     Route::prefix('checkout')->controller(CheckoutController::class)->group(function () {
         Route::post('order', 'store')->name('checkout.store');
         Route::get('success', 'success')->name('checkout.success');
@@ -73,21 +63,16 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 | Routes pour l'Administration
 |--------------------------------------------------------------------------
-| Ces routes sont accessibles aux administrateurs.
 */
 
 Route::prefix('admin')->group(function () {
-    // Routes publiques pour l'admin (login/logout)
     Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('login', [AdminAuthController::class, 'login'])->name('admin.login.post');
     Route::post('logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
-    // Routes protégées pour l'admin
     Route::middleware(['auth', 'redirectAdmin'])->group(function () {
-        // Tableau de bord admin
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-        // Gestion des produits
         Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
         Route::post('/products/store', [ProductController::class, 'store'])->name('admin.products.store');
         Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('admin.products.update');
@@ -100,7 +85,6 @@ Route::prefix('admin')->group(function () {
 |--------------------------------------------------------------------------
 | Routes pour les Images de Produits
 |--------------------------------------------------------------------------
-| Ces routes servent à afficher les images des produits.
 */
 
 Route::get('/product_images/{image}', function ($image) {
@@ -116,7 +100,6 @@ Route::get('/product_images/{image}', function ($image) {
 |--------------------------------------------------------------------------
 | Routes d'Authentification
 |--------------------------------------------------------------------------
-| Ces routes sont générées par Laravel Breeze/Jetstream pour la gestion de l'authentification.
 */
 
 require __DIR__ . '/auth.php';
