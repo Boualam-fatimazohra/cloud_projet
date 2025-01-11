@@ -36,6 +36,9 @@ RUN apt-get install -y nodejs
 # Copier les fichiers du projet dans le conteneur
 COPY . .
 
+# Définir les permissions pour le répertoire /var/www/html
+RUN chown -R www-data:www-data /var/www/html
+
 # Définir les permissions pour le dossier public/build
 RUN mkdir -p /var/www/html/public/build/assets && \
     chown -R www-data:www-data /var/www/html/public/build
