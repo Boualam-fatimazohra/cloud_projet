@@ -1,20 +1,17 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class RedirectAdmin
 {
-    public function handle(Request $request, Closure $next, $guard = null): Response
+    public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard($guard)->check() && Auth::user()->isAdmin == 1) {
-            return redirect()->route('admin.dashboard');
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return $next($request);
         }
-
-        return $next($request);
+        return redirect('/'); // Redirection vers la page d'accueil
     }
 }
