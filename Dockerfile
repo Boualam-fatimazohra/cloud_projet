@@ -36,8 +36,14 @@ RUN apt-get install -y nodejs
 # Copier les fichiers du projet dans le conteneur
 COPY . .
 
+# Définir les permissions pour le dossier public/build
+RUN mkdir -p /var/www/html/public/build/assets && \
+    chown -R www-data:www-data /var/www/html/public/build
+
 # Installer les dépendances Node.js et compiler les assets
+USER www-data
 RUN npm install && npm run build
+USER root
 
 # Copier et rendre exécutable le script entrypoint.sh
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
