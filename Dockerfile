@@ -59,13 +59,13 @@ USER root
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-RUN php artisan storage:link
+
 # Définir les permissions pour le dossier de stockage
 RUN chown -R www-data:www-data /var/www/html/storage
 
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
-
+RUN php artisan storage:link
 # Configurer Apache pour Laravel
 RUN a2enmod rewrite
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
