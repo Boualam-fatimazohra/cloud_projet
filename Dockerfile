@@ -10,7 +10,8 @@ RUN touch /etc/apt/sources.list
 # Utiliser un miroir de secours pour APT
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
-
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # Installer les dépendances système nécessaires pour Laravel et PostgreSQL
 
 RUN apt-get update && apt-get install -y \
