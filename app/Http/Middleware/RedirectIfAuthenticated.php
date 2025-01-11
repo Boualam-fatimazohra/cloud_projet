@@ -11,20 +11,19 @@ use Symfony\Component\HttpFoundation\Response;
 class RedirectIfAuthenticated
 {
     public function handle(Request $request, Closure $next, string ...$guards): Response
-    {
-        $guards = empty($guards) ? [null] : $guards;
+{
+    $guards = empty($guards) ? [null] : $guards;
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                // Si l'utilisateur est un admin, ne pas rediriger
-                if (Auth::user()->isAdmin == 1) {
-                    return $next($request);
-                }
-                // Sinon, rediriger vers la page d'accueil
-                return redirect(RouteServiceProvider::HOME);
+    foreach ($guards as $guard) {
+        if (Auth::guard($guard)->check()) {
+            // Si l'utilisateur est déjà sur la page d'accueil, ne pas rediriger
+            if ($request->routeIs('home')) {
+                return $next($request);
             }
+            return redirect(RouteServiceProvider::HOME);
         }
-
-        return $next($request);
     }
+
+    return $next($request);
+}
 }
