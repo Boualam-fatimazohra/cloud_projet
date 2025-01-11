@@ -29,8 +29,15 @@ RUN apt-get update && apt-get install -y \
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Installer Node.js et npm
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get install -y nodejs
+
 # Copier les fichiers du projet dans le conteneur
 COPY . .
+
+# Installer les dépendances Node.js et compiler les assets
+RUN npm install && npm run build
 
 # Copier et rendre exécutable le script entrypoint.sh
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
