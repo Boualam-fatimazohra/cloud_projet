@@ -74,3 +74,4 @@ COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
 # Utiliser le script entrypoint.sh comme point d'entrée
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
