@@ -17,8 +17,11 @@ return [
     |            "memcached", "redis", "dynamodb", "array"
     |
     */
-
-    'driver' => env('SESSION_DRIVER', 'file'),
+    'driver' => env('SESSION_DRIVER', 'database'),
+    'lifetime' => env('SESSION_LIFETIME', 120),
+    'domain' => env('SESSION_DOMAIN', null),
+    'secure' => env('SESSION_SECURE_COOKIE', true),
+    'same_site' => 'lax',
 
     /*
     |--------------------------------------------------------------------------

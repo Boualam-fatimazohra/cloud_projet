@@ -27,7 +27,16 @@ Route::get('/categorie', function () {
 Route::get('/contact', function () {
     return Inertia::render('Contact');
 })->name('contact');
-
+Route::get('/debug', function () {
+    return [
+        'app_url' => config('app.url'),
+        'env' => config('app.env'),
+        'debug' => config('app.debug'),
+        'key' => !empty(config('app.key')),
+        'database' => config('database.default'),
+        'session_driver' => config('session.driver'),
+    ];
+});
 Route::prefix('products')->controller(ProductListController::class)->group(function () {
     Route::get('/', 'index')->name('products.index');
 });
