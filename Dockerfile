@@ -10,7 +10,7 @@ RUN touch /etc/apt/sources.list
 # Utiliser un miroir de secours pour APT
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
-# Installer les dépendances système nécessaires pour Laravel et PostgreSQL
+# Installer les dépendances système nécessaires pour Laravel
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
@@ -20,8 +20,9 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     libonig-dev \
-    libpq-dev \  # Ajout pour PostgreSQL && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd pdo_pgsql pgsql \  # Ajout de pdo_pgsql et pgsql && apt-get clean \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Installer Composer
