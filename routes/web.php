@@ -7,21 +7,30 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\CheckoutController;
 use App\Http\Controllers\User\DashboardController;
-use App\Http\Controllers\User\ProductController as UserProductController;
 use App\Http\Controllers\User\ProductListController;
 use App\Http\Controllers\User\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-// Routes publiques
+/*
+|--------------------------------------------------------------------------
+| Routes Publiques
+|--------------------------------------------------------------------------
+| Ces routes sont accessibles à tous les utilisateurs, même non connectés.
+*/
+
+// Page d'accueil
 Route::get('/', [UserController::class, 'index'])->name('home');
+
+// Page de catégorie
 Route::get('/categorie', function () {
     return Inertia::render('categori');
-});
+})->name('categorie');
+
+// Page de contact
 Route::get('/contact', function () {
     return Inertia::render('contact');
-});
+})->name('contact');
 
 // Routes pour les produits
 Route::prefix('products')->controller(ProductListController::class)->group(function () {
@@ -36,9 +45,18 @@ Route::prefix('cart')->controller(CartController::class)->group(function () {
     Route::delete('delete/{product}', 'delete')->name('cart.delete');
 });
 
-// Routes pour les utilisateurs connectés
+/*
+|--------------------------------------------------------------------------
+| Routes pour les Utilisateurs Connectés
+|--------------------------------------------------------------------------
+| Ces routes sont accessibles uniquement aux utilisateurs authentifiés.
+*/
+
 Route::middleware('auth')->group(function () {
+    // Tableau de bord utilisateur
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Gestion du profil utilisateur
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -51,7 +69,13 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Routes pour l'administration
+/*
+|--------------------------------------------------------------------------
+| Routes pour l'Administration
+|--------------------------------------------------------------------------
+| Ces routes sont accessibles aux administrateurs.
+*/
+
 Route::prefix('admin')->group(function () {
     // Routes publiques pour l'admin (login/logout)
     Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
@@ -59,8 +83,11 @@ Route::prefix('admin')->group(function () {
     Route::post('logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
     // Routes protégées pour l'admin
-    Route::middleware(['auth', 'admin'])->group(function () {
+    Route::middleware(['auth', 'redirectAdmin'])->group(function () {
+        // Tableau de bord admin
         Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+        // Gestion des produits
         Route::get('/products', [ProductController::class, 'index'])->name('admin.products.index');
         Route::post('/products/store', [ProductController::class, 'store'])->name('admin.products.store');
         Route::put('/products/update/{id}', [ProductController::class, 'update'])->name('admin.products.update');
@@ -69,7 +96,13 @@ Route::prefix('admin')->group(function () {
     });
 });
 
-// Routes pour les images de produits
+/*
+|--------------------------------------------------------------------------
+| Routes pour les Images de Produits
+|--------------------------------------------------------------------------
+| Ces routes servent à afficher les images des produits.
+*/
+
 Route::get('/product_images/{image}', function ($image) {
     $path = storage_path('app/public/product_images/' . $image);
     if (file_exists($path)) {
@@ -77,6 +110,13 @@ Route::get('/product_images/{image}', function ($image) {
     } else {
         abort(404, 'Image non trouvée');
     }
-});
+})->name('product_images');
+
+/*
+|--------------------------------------------------------------------------
+| Routes d'Authentification
+|--------------------------------------------------------------------------
+| Ces routes sont générées par Laravel Breeze/Jetstream pour la gestion de l'authentification.
+*/
 
 require __DIR__ . '/auth.php';
