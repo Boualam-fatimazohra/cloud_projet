@@ -34,7 +34,7 @@ chmod -R 775 /var/www/html/bootstrap/cache
 
 
 # Créer la table de sessions si nécessaire
-php artisan session:table
+
 php artisan migrate --force
 
 # Migrations (avec --force pour l'environnement de production)
