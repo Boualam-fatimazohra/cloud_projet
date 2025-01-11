@@ -10,10 +10,7 @@ RUN touch /etc/apt/sources.list
 # Utiliser un miroir de secours pour APT
 RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 # Installer les dépendances système nécessaires pour Laravel et PostgreSQL
-
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
@@ -23,9 +20,9 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libfreetype6-dev \
     libonig-dev \
-    libpq-dev \ 
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd \
+    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd pdo_pgsql pgsql \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -34,6 +31,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Copier les fichiers du projet dans le conteneur
 COPY . .
+
+# Copier et rendre exécutable le script entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Définir les permissions pour le dossier de stockage
 RUN chown -R www-data:www-data /var/www/html/storage
@@ -48,5 +49,5 @@ COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 # Exposer le port 80
 EXPOSE 80
 
-# Commande pour démarrer Apache
-CMD ["apache2-foreground"]
+# Utiliser le script entrypoint.sh comme point d'entrée
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
