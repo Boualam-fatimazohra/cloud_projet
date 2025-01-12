@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Service pour l'application Laravel
   app:
     build:
       context: .
@@ -13,18 +12,17 @@ services:
       - .:/var/www/html
     environment:
       - DB_CONNECTION=pgsql
-      - DB_HOST=dpg-cu0kms3qf0us73b0fhhg-a.frankfurt-postgres.render.com  # Remplacez par l'hôte de Render
+      - DB_HOST=dpg-cu0kms3qf0us73b0fhhg-a.frankfurt-postgres.render.com
       - DB_PORT=5432
-      - DB_DATABASE=bookstore_u02x  # Remplacez par le nom de la base de données
-      - DB_USERNAME=root  # Remplacez par l'utilisateur de la base de données
-      - DB_PASSWORD=cpztKE013AzPd5Za3a0Mb7BDqTTY3MdG  # Remplacez par le mot de passe de la base de données
+      - DB_DATABASE=bookstore_u02x
+      - DB_USERNAME=root
+      - DB_PASSWORD=cpztKE013AzPd5Za3a0Mb7BDqTTY3MdG
       - DB_SSLMODE=require
     ports:
-      - "8000:80"
+      - "8080:80"  # Updated host port
     networks:
       - laravel_network
 
-# Réseau pour connecter les services
 networks:
   laravel_network:
     driver: bridge
