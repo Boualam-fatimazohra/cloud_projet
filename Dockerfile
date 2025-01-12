@@ -90,7 +90,8 @@ USER root
 RUN a2enmod rewrite
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 RUN a2ensite 000-default.conf
-
+RUN mkdir -p /var/log/apache2 && \
+    chown -R www-data:www-data /var/log/apache2
 # -------------------------------
 # Copie et configuration de l'entrypoint
 # -------------------------------

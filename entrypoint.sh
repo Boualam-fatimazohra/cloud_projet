@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Arrêter Apache s'il est déjà en cours d'exécution
-service apache2 stop
+apache2ctl stop
 
 # Création du fichier .env si nécessaire
 if [ ! -f .env ]; then
@@ -35,7 +35,7 @@ php artisan migrate --force
 
 # Redémarrer Apache
 echo "Redémarrage d'Apache..."
-service apache2 restart
+apache2ctl restart
 
 # Démarrage d'Apache en mode foreground
 exec apache2-foreground
