@@ -20,11 +20,11 @@ php artisan route:clear
 php artisan route:cache
 php artisan view:clear
 php artisan view:cache
+
 # Vérifier la configuration
 php artisan config:clear
 php artisan route:clear
 php artisan cache:clear
-
 
 # Vérifier les permissions
 chown -R www-data:www-data /var/www/html/storage
@@ -32,13 +32,12 @@ chmod -R 775 /var/www/html/storage
 chown -R www-data:www-data /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/bootstrap/cache
 
-
-# Créer la table de sessions si nécessaire
-
-php artisan migrate --force
-
 # Migrations (avec --force pour l'environnement de production)
 php artisan migrate --force
+php artisan migrate:status
+# Redémarrer Apache pour appliquer les changements
+echo "Redémarrage d'Apache..."
+service apache2 restart
 
-# Démarrage d'Apache
+# Démarrage d'Apache en mode foreground
 exec apache2-foreground
