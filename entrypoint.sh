@@ -35,9 +35,13 @@ chmod -R 775 /var/www/html/bootstrap/cache
 # Migrations (avec --force pour l'environnement de production)
 php artisan migrate --force
 php artisan migrate:status
-# Redémarrer Apache pour appliquer les changements
-echo "Redémarrage d'Apache..."
-service apache2 restart
-
+# Vérifier si Apache est déjà en cours d'exécution
+if ! pgrep apache2; then
+    echo "Redémarrage d'Apache..."
+    service apache2 restart
+else
+    echo "Apache est déjà en cours d'exécution."
+fi
+tail -f /var/log/apache2/error.log
 # Démarrage d'Apache en mode foreground
 exec apache2-foreground
