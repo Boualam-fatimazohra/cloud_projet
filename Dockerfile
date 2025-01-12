@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd pdo_pgsql pgsql \
+    && docker-php-ext-install zip mbstring exif pcntl bcmath gd pdo_pgsql pgsql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # -------------------------------
@@ -96,7 +96,7 @@ RUN a2ensite 000-default.conf
 # -------------------------------
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
-RUN docker-php-ext-install pdo_pgsql pgsql
+
 # -------------------------------
 # Exposer le port 80 pour Apache
 # -------------------------------
