@@ -41,7 +41,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # -------------------------------
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
-RUN docker-php-ext-install pdo_pgsql pgsql
+
 # -------------------------------
 # Copier les fichiers du projet
 # -------------------------------
@@ -59,52 +59,3 @@ RUN chown -R www-data:www-data /var/www/html && \
 # -------------------------------
 RUN mkdir -p /var/www/.npm && \
     chown -R www-data:www-data /var/www/.npm
-ENV npm_config_cache=/var/www/.npm
-
-# -------------------------------
-# Installation des dépendances PHP avec Composer
-# -------------------------------
-RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
-
-# -------------------------------
-# Configuration des permissions (storage et cache Laravel)
-# -------------------------------
-RUN chmod -R 775 /var/www/html/storage && \
-    chmod -R 775 /var/www/html/bootstrap/cache
-
-# -------------------------------
-# Lien symbolique pour les fichiers storage
-# -------------------------------
-RUN php artisan storage:link
-
-# -------------------------------
-# Installation et build des assets Node.js
-# -------------------------------
-USER www-data
-RUN npm install && npm run build
-USER root
-
-# -------------------------------
-# Configuration Apache (mod_rewrite + virtual host)
-# -------------------------------
-RUN a2enmod rewrite
-COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
-RUN a2ensite 000-default.conf
-RUN mkdir -p /var/log/apache2 && \
-    chown -R www-data:www-data /var/log/apache2
-# -------------------------------
-# Copie et configuration de l'entrypoint
-# -------------------------------
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# -------------------------------
-# Exposer le port 80 pour Apache
-# -------------------------------
-EXPOSE 80
-
-# -------------------------------
-# Définir l'entrypoint et la commande de démarrage
-# -------------------------------
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["apache2ctl", "-D", "FOREGROUND"]
