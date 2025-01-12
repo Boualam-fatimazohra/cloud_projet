@@ -41,7 +41,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # -------------------------------
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
-
+RUN docker-php-ext-install pdo_pgsql pgsql
 # -------------------------------
 # Copier les fichiers du projet
 # -------------------------------
