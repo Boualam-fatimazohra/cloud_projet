@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Arrêter Apache s'il est déjà en cours d'exécution
+service apache2 stop
+
 # Création du fichier .env si nécessaire
 if [ ! -f .env ]; then
     cp .env.example .env
@@ -21,16 +24,18 @@ php artisan config:clear
 php artisan route:clear
 php artisan cache:clear
 
+# Vérifier les permissions
+chown -R www-data:www-data /var/www/html/storage
+chmod -R 775 /var/www/html/storage
+chown -R www-data:www-data /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/bootstrap/cache
+
 # Migrations (avec --force pour l'environnement de production)
 php artisan migrate --force
 
-# Vérifier si Apache est déjà en cours d'exécution
-if ! pgrep apache2; then
-    echo "Redémarrage d'Apache..."
-    service apache2 restart
-else
-    echo "Apache est déjà en cours d'exécution."
-fi
+# Redémarrer Apache
+echo "Redémarrage d'Apache..."
+service apache2 restart
 
 # Démarrage d'Apache en mode foreground
 exec apache2-foreground
