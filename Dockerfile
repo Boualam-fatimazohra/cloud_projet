@@ -28,7 +28,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install zip mbstring exif pcntl bcmath gd pdo_pgsql pgsql \
+    && docker-php-ext-install zip mbstring exif pcntl bcmath gd pdo_pgsql pgsql\
+    && docker-php-ext-install pdo_pgsql pgsql\
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # -------------------------------
