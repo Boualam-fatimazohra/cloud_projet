@@ -43,5 +43,6 @@ else
     echo "Apache est déjà en cours d'exécution."
 fi
 tail -f /var/log/apache2/error.log
+tail -f /var/log/apache2/error.log /var/www/html/storage/logs/laravel.log
 # Démarrage d'Apache en mode foreground
 exec apache2-foreground

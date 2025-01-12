@@ -96,7 +96,7 @@ RUN a2ensite 000-default.conf
 # -------------------------------
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
-
+RUN docker-php-ext-install pdo_pgsql pgsql
 # -------------------------------
 # Exposer le port 80 pour Apache
 # -------------------------------
