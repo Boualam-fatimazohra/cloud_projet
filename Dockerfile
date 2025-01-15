@@ -42,8 +42,8 @@ COPY --chown=www-data:www-data . .
 USER www-data
 RUN composer install --no-dev --optimize-autoloader
 
-# Copier le script entrypoint
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+# Copier le script entrypoint avec les bonnes permissions
+COPY --chown=www-data:www-data entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Définir l'entrée du conteneur
