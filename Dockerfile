@@ -43,19 +43,29 @@ RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
 
 # -------------------------------
-# Copier les fichiers du projet
-# -------------------------------
-COPY . .
-
-# -------------------------------
 # Configuration des permissions (projet)
 # -------------------------------
-RUN chown -R www-data:www-data /var/www/html && \
-    mkdir -p /var/www/html/public/build/assets && \
-    chown -R www-data:www-data /var/www/html/public/build
+RUN mkdir -p /var/www/html/public/build/assets && \
+    chown -R www-data:www-data /var/www/html
 
 # -------------------------------
 # Configuration du cache npm
 # -------------------------------
 RUN mkdir -p /var/www/.npm && \
     chown -R www-data:www-data /var/www/.npm
+
+# -------------------------------
+# Copier les fichiers du projet
+# -------------------------------
+COPY . .
+
+# -------------------------------
+# Copier le script d'entrée
+# -------------------------------
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# -------------------------------
+# Définir l'entrée
+# -------------------------------
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
