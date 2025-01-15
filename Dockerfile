@@ -58,10 +58,12 @@ RUN mkdir -p /var/www/.npm && \
 # Copier les fichiers du projet
 # -------------------------------
 COPY . .
+
 # -------------------------------
 # Installer les dépendances Composer
 # -------------------------------
 RUN composer install --no-dev --optimize-autoloader
+
 # -------------------------------
 # Copier le script d'entrée
 # -------------------------------

@@ -19,7 +19,7 @@ services:
       - DB_PASSWORD=cpztKE013AzPd5Za3a0Mb7BDqTTY3MdG
       - DB_SSLMODE=require
     ports:
-      - "8080:8080"  # Utiliser un port différent pour éviter les conflits
+      - "8080:8080"  # Utiliser le port 8080 pour éviter les conflits
     networks:
       - laravel_network
 
