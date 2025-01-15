@@ -25,15 +25,24 @@ echo "Vérification des fichiers dans /var/www/html/public..."
 ls -l /var/www/html/public
 
 # Configurer Apache pour utiliser le port 8081
-sed -i 's/Listen 80/Listen 8081/g' /etc/apache2/ports.conf
-sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8081>/g' /etc/apache2/sites-available/000-default.conf
+sudo sed -i 's/Listen 80/Listen 8081/g' /etc/apache2/ports.conf
+sudo sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8081>/g' /etc/apache2/sites-available/000-default.conf
+
+# Copier et activer la configuration Apache personnalisée
+sudo cp /var/www/html/apache.conf /etc/apache2/sites-available/cloud-projet.conf
+sudo a2ensite cloud-projet.conf
+sudo a2dissite 000-default.conf
 
 # Définir ServerName pour éviter les avertissements Apache
-echo "ServerName cloud-projet-gku4.onrender.com" >> /etc/apache2/apache2.conf
+echo "ServerName cloud-projet-gku4.onrender.com" | sudo tee -a /etc/apache2/apache2.conf
+
+# Ajuster les permissions des fichiers
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod -R 755 /var/www/html
 
 # Redémarrer Apache
 echo "Redémarrage d'Apache..."
-apache2ctl restart
+sudo apache2ctl restart
 
 # Vérifier le statut d'Apache
 if ! pgrep apache2 > /dev/null; then
