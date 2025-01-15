@@ -1,15 +1,15 @@
 #!/bin/bash
-set -e  # Arrêter le script en cas d'erreur
+set -e  # Stop the script on error
 
-# Création du fichier .env si nécessaire
+# Create .env file if it doesn't exist
 if [ ! -f .env ]; then
     cp .env.example .env
 fi
 
-# Génération de la clé d'application
+# Generate application key
 php artisan key:generate --force
 
-# Cache de la configuration
+# Clear and cache configuration
 php artisan config:clear
 php artisan config:cache
 php artisan route:clear
@@ -17,48 +17,45 @@ php artisan route:cache
 php artisan view:clear
 php artisan view:cache
 
-# Vérifier la configuration
+# Clear caches
 php artisan config:clear
 php artisan route:clear
 php artisan cache:clear
 
-# Migrations (avec --force pour l'environnement de production)
+# Run migrations
 php artisan migrate --force
 
-# Vérification des fichiers dans /var/www/html/public
-echo "Vérification des fichiers dans /var/www/html/public..."
+# Check files in /var/www/html/public
+echo "Checking files in /var/www/html/public..."
 ls -l /var/www/html/public
 
-# Installer les dépendances Composer
-composer install --no-dev --optimize-autoloader
+# Install Composer dependencies as non-root user
+sudo -u www-data composer install --no-dev --optimize-autoloader
 
-# Configuration des permissions
+# Set permissions
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
 chmod -R 775 /var/www/html/storage
 chmod -R 775 /var/www/html/bootstrap/cache
 
-# Configuration d'Apache pour utiliser le port 8080
-sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
-sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8080>/g' /etc/apache2/sites-available/000-default.conf
+# Configure Apache to use port 8081
+sed -i 's/Listen 80/Listen 8081/g' /etc/apache2/ports.conf
+sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8081>/g' /etc/apache2/sites-available/000-default.conf
 
-# Vérification de la configuration d'Apache
-if ! grep -q "Listen 80" /etc/apache2/ports.conf; then
-    echo "Erreur : Apache n'est pas configuré pour écouter sur le port 80."
-    exit 1
-fi
+# Set ServerName to avoid Apache warning
+echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Redémarrage d'Apache
-echo "Redémarrage d'Apache..."
+# Restart Apache
+echo "Restarting Apache..."
 apache2ctl restart
 
-# Vérification du statut d'Apache
+# Check Apache status
 if ! pgrep apache2 > /dev/null; then
-    echo "Erreur : Apache n'a pas démarré correctement."
+    echo "Error: Apache did not start correctly."
     exit 1
 else
-    echo "Apache est en cours d'exécution."
+    echo "Apache is running."
 fi
 
-# Démarrage d'Apache en mode foreground
+# Start Apache in foreground mode
 exec apache2-foreground

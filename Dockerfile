@@ -1,22 +1,14 @@
-# -------------------------------
 # Base image
-# -------------------------------
 FROM php:8.2-apache
 
-# -------------------------------
-# Définir le répertoire de travail
-# -------------------------------
+# Set working directory
 WORKDIR /var/www/html
 
-# -------------------------------
-# Configuration des sources (Debian Archive)
-# -------------------------------
+# Configure sources (Debian Archive)
 RUN touch /etc/apt/sources.list && \
     sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
-# -------------------------------
-# Installation des dépendances système
-# -------------------------------
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
@@ -31,46 +23,31 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip mbstring exif pcntl bcmath gd pdo_pgsql pgsql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# -------------------------------
-# Installation de Composer (2.5.8)
-# -------------------------------
+# Install Composer (2.5.8)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.5.8
 
-# -------------------------------
-# Installation de Node.js (16.x)
-# -------------------------------
+# Install Node.js (16.x)
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
 
-# -------------------------------
-# Configuration des permissions (projet)
-# -------------------------------
+# Set project permissions
 RUN mkdir -p /var/www/html/public/build/assets && \
     chown -R www-data:www-data /var/www/html
 
-# -------------------------------
-# Configuration du cache npm
-# -------------------------------
+# Configure npm cache
 RUN mkdir -p /var/www/.npm && \
     chown -R www-data:www-data /var/www/.npm
 
-# -------------------------------
-# Copier les fichiers du projet
-# -------------------------------
+# Copy project files
 COPY . .
 
-# -------------------------------
-# Installer les dépendances Composer
-# -------------------------------
+# Install Composer dependencies as non-root user
+USER www-data
 RUN composer install --no-dev --optimize-autoloader
 
-# -------------------------------
-# Copier le script d'entrée
-# -------------------------------
+# Copy entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# -------------------------------
-# Définir l'entrée
-# -------------------------------
+# Set entrypoint
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
