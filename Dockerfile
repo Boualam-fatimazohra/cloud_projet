@@ -36,7 +36,7 @@ RUN mkdir -p /var/www/.npm && \
     chown -R www-data:www-data /var/www/.npm
 
 # Copier les fichiers du projet
-COPY . .
+COPY --chown=www-data:www-data . .
 
 # Installer les dépendances Composer en tant qu'utilisateur non-root
 USER www-data
