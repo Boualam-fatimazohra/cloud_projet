@@ -28,6 +28,11 @@ ls -l /var/www/html/public
 sed -i 's/Listen 80/Listen 8081/g' /etc/apache2/ports.conf
 sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8081>/g' /etc/apache2/sites-available/000-default.conf
 
+# Vérifier que les modifications sont bien appliquées
+echo "Vérification de la configuration Apache..."
+cat /etc/apache2/ports.conf
+cat /etc/apache2/sites-available/000-default.conf
+
 # Copier et activer la configuration Apache personnalisée
 cp /var/www/html/apache.conf /etc/apache2/sites-available/cloud-projet.conf
 a2ensite cloud-projet.conf
@@ -39,6 +44,12 @@ echo "ServerName cloud-projet-gku4.onrender.com" >> /etc/apache2/apache2.conf
 # Ajuster les permissions des fichiers
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
+
+# Corriger les permissions des logs Apache
+chown -R www-data:www-data /var/log/apache2
+
+# Arrêter tout processus utilisant le port 80
+fuser -k 80/tcp || true
 
 # Redémarrer Apache
 echo "Redémarrage d'Apache..."
