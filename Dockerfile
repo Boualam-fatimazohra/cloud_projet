@@ -1,14 +1,13 @@
-# Base image
+# Utiliser l'image de base PHP 8.2 avec Apache
 FROM php:8.2-apache
 
-# Set working directory
+# Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Configure sources (Debian Archive)
-RUN touch /etc/apt/sources.list && \
-    sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
+# Configurer les sources pour utiliser les archives Debian
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
 
-# Install system dependencies
+# Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
@@ -23,31 +22,32 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip mbstring exif pcntl bcmath gd pdo_pgsql pgsql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Composer (2.5.8)
+# Installer Composer (version 2.5.8)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.5.8
 
-# Install Node.js (16.x)
+# Installer Node.js (version 16.x)
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
     apt-get install -y nodejs
 
-# Set project permissions
+# Configurer les permissions pour le répertoire du projet
 RUN mkdir -p /var/www/html/public/build/assets && \
+    mkdir -p /var/www/html/vendor && \
     chown -R www-data:www-data /var/www/html
 
-# Configure npm cache
+# Configurer le cache npm
 RUN mkdir -p /var/www/.npm && \
     chown -R www-data:www-data /var/www/.npm
 
-# Copy project files
+# Copier les fichiers du projet
 COPY . .
 
-# Install Composer dependencies as non-root user
+# Installer les dépendances Composer en tant qu'utilisateur non-root
 USER www-data
 RUN composer install --no-dev --optimize-autoloader
 
-# Copy entrypoint script
+# Copier le script entrypoint
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Set entrypoint
+# Définir l'entrée du conteneur
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
