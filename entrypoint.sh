@@ -28,7 +28,8 @@ php artisan migrate --force
 # Vérification des fichiers dans /var/www/html/public
 echo "Vérification des fichiers dans /var/www/html/public..."
 ls -l /var/www/html/public
-
+# Installer les dépendances Composer
+composer install --no-dev --optimize-autoloader
 # Vérifier si Apache est déjà en cours d'exécution
 if ! pgrep apache2; then
     echo "Redémarrage d'Apache..."
