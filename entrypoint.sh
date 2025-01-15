@@ -37,3 +37,5 @@ chmod -R 775 /var/www/html/storage
 chmod -R 775 /var/www/html/bootstrap/cache
 # Démarrage d'Apache en mode foreground
 exec apache2-foreground
+echo "Vérification des fichiers dans /var/www/html/public..."
+ls -l /var/www/html/public

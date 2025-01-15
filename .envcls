@@ -1,7 +1,7 @@
 APP_NAME=Laravel
 APP_ENV=production
-APP_KEY=base64:...
-APP_DEBUG=false
+APP_KEY=base64:XPvud/yZT6/OQbAra+mY/GuVYBWL47FAZY8eUFv7TfE=
+PP_DEBUG=false
 APP_URL=http://cloud-projet-gku4.onrender.com
 
 LOG_CHANNEL=stack
