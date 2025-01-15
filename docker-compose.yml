@@ -3,26 +3,26 @@ version: '3.8'
 services:
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel_app
-    restart: unless-stopped
-    working_dir: /var/www/html
+      context: .  # Utilise le répertoire courant pour construire l'image
+      dockerfile: Dockerfile  # Spécifie le Dockerfile à utiliser
+    container_name: laravel_app  # Nom du conteneur
+    restart: unless-stopped  # Redémarre le conteneur sauf s'il est arrêté manuellement
+    working_dir: /var/www/html  # Répertoire de travail dans le conteneur
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html  # Monte le répertoire courant dans /var/www/html
     environment:
-      - DB_CONNECTION=pgsql
-      - DB_HOST=dpg-cu0kms3qf0us73b0fhhg-a.frankfurt-postgres.render.com
-      - DB_PORT=5432
-      - DB_DATABASE=bookstore_u02x
-      - DB_USERNAME=root
-      - DB_PASSWORD=cpztKE013AzPd5Za3a0Mb7BDqTTY3MdG
-      - DB_SSLMODE=require
+      - DB_CONNECTION=pgsql  # Type de base de données
+      - DB_HOST=dpg-cu0kms3qf0us73b0fhhg-a.frankfurt-postgres.render.com  # Hôte de la base de données
+      - DB_PORT=5432  # Port de la base de données
+      - DB_DATABASE=bookstore_u02x  # Nom de la base de données
+      - DB_USERNAME=root  # Nom d'utilisateur de la base de données
+      - DB_PASSWORD=cpztKE013AzPd5Za3a0Mb7BDqTTY3MdG  # Mot de passe de la base de données
+      - DB_SSLMODE=require  # Mode SSL pour la connexion à la base de données
     ports:
-      - "8081:8081"
+      - "8081:8081"  # Expose le port 8081 du conteneur sur le port 8081 de l'hôte
     networks:
-      - laravel_network
+      - laravel_network  # Connecte le service au réseau "laravel_network"
 
 networks:
   laravel_network:
-    driver: bridge
+    driver: bridge  # Utilise le driver "bridge" pour le réseau
