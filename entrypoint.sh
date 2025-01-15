@@ -31,6 +31,9 @@ if ! pgrep apache2; then
 else
     echo "Apache est déjà en cours d'exécution."
 fi
-
+chown -R www-data:www-data /var/www/html
+chmod -R 755 /var/www/html
+chmod -R 775 /var/www/html/storage
+chmod -R 775 /var/www/html/bootstrap/cache
 # Démarrage d'Apache en mode foreground
 exec apache2-foreground
