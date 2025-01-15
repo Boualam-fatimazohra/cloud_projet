@@ -42,9 +42,23 @@ chmod -R 775 /var/www/html/bootstrap/cache
 sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
 sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8080>/g' /etc/apache2/sites-available/000-default.conf
 
+# Vérification de la configuration d'Apache
+if ! grep -q "Listen 8080" /etc/apache2/ports.conf; then
+    echo "Erreur : Apache n'est pas configuré pour écouter sur le port 8080."
+    exit 1
+fi
+
 # Redémarrage d'Apache
 echo "Redémarrage d'Apache..."
 apache2ctl restart
+
+# Vérification du statut d'Apache
+if ! pgrep apache2 > /dev/null; then
+    echo "Erreur : Apache n'a pas démarré correctement."
+    exit 1
+else
+    echo "Apache est en cours d'exécution."
+fi
 
 # Démarrage d'Apache en mode foreground
 exec apache2-foreground
