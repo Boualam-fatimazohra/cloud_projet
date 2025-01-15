@@ -43,8 +43,8 @@ sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
 sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8080>/g' /etc/apache2/sites-available/000-default.conf
 
 # Vérification de la configuration d'Apache
-if ! grep -q "Listen 8080" /etc/apache2/ports.conf; then
-    echo "Erreur : Apache n'est pas configuré pour écouter sur le port 8080."
+if ! grep -q "Listen 80" /etc/apache2/ports.conf; then
+    echo "Erreur : Apache n'est pas configuré pour écouter sur le port 80."
     exit 1
 fi
 
