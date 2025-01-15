@@ -39,11 +39,11 @@ chmod -R 775 /var/www/html/storage
 chmod -R 775 /var/www/html/bootstrap/cache
 
 # Configure Apache to use port 8081
-sed -i 's/Listen 80/Listen 8081/g' /etc/apache2/ports.conf
+sed -i 's/Listen 80/Listen 8081/g' /etc/apache/ports.conf
 sed -i 's/<VirtualHost \*:80>/<VirtualHost \*:8081>/g' /etc/apache2/sites-available/000-default.conf
 
 # Set ServerName to avoid Apache warning
-echo "ServerName localhost" >> /etc/apache2/apache2.conf
+echo "ServerName cloud-projet-gku4.onrender.com" >> /etc/apache2/apache2.conf
 
 # Restart Apache
 echo "Restarting Apache..."
