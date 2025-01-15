@@ -4,9 +4,6 @@ FROM php:8.2-apache
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Configurer les sources pour utiliser les archives Debian
-RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
-
 # Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     libzip-dev \
